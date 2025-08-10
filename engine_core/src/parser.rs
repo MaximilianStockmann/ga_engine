@@ -1,10 +1,10 @@
-use crate::Card;
+use crate::cards::CardInfo;
 use core::fmt;
 use serde_json;
 use std::fs::File;
 use std::io::BufReader;
 
-pub fn import_cards() -> Result<Vec<Card>, ImportError> {
+pub fn import_cards() -> Result<Vec<CardInfo>, ImportError> {
     let file = File::open("C:\\Users\\User\\Documents\\Programming\\Rust\\ga_engine\\cards.json")?;
     let reader = BufReader::new(file);
 
