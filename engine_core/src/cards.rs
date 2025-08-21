@@ -5,13 +5,13 @@ use crate::{Player, zones::Zone};
 
 // TODO: Cards need to know which zone they're in somehow
 // TODO: Decide on when and how to set card ownership.
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq, Clone)]
 pub struct Card {
     pub owning_player: Option<Player>,
     pub card_info: CardInfo,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct CardInfo {
     pub classes: Vec<Class>,
     pub cost_memory: Option<i32>,
@@ -38,7 +38,7 @@ pub struct CardInfo {
 }
 
 // TODO: Give kind and direction proper enum types
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct CardRefernce {
     kind: String,
     name: String,
@@ -46,14 +46,14 @@ pub struct CardRefernce {
     direction: String,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct Ruling {
     title: String,
     date_added: String,
     description: String,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum Class {
     ASSASSIN,
     CLERIC,
@@ -65,7 +65,7 @@ pub enum Class {
     WARRIOR,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum Type {
     ACTION,
     ALLY,
@@ -81,7 +81,7 @@ pub enum Type {
     WEAPON,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum Subtype {
     ACCESSORY,
     ADJUVANT,
@@ -227,7 +227,7 @@ pub enum Subtype {
     WOLF,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum Element {
     ARCANE,
     ASTRA,
@@ -244,7 +244,7 @@ pub enum Element {
     WIND,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct EditionInfo {}
 
 pub trait CardBehavior {
@@ -261,3 +261,49 @@ impl From<CardInfo> for Card {
         }
     }
 }
+
+impl From<&CardInfo> for Card {
+    fn from(card_info: &CardInfo) -> Self {
+        Self {
+            owning_player: None,
+            card_info: card_info.clone(),
+        }
+    }
+}
+
+/* impl Ruling {
+    pub fn new() {
+        Self {}
+    }
+} */
+
+/*
+impl Default for CardInfo {
+    fn default() -> Self {
+        CardInfo {
+            classes: vec![Class::WARRIOR],
+            cost_memory: None,
+            cost_reserve: Some(3),
+            durability: None,
+            editions: vec![],
+            effect: None,
+            element: Element::NORM,
+            elements: vec![Element::NORM],
+            flavor: Some(String::from("Do the impossible, see the invisible.")),
+            last_update: DateTime::parse_from_rfc3339("2025-01-18T17:40:17.152+00:00").unwrap(),
+            level: None,
+            life: None,
+            name: String::from("Pierce the Heavens"),
+            power: 3,
+            referenced_by: vec![],
+            references: vec![],
+            result_editions: vec![],
+            rule: Ruling::,
+            slug: (),
+            speed: (),
+            subtypes: (),
+            uuid: (),
+        }
+    }
+}
+*/

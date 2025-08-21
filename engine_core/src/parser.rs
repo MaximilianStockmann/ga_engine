@@ -15,6 +15,7 @@ pub fn import_cards() -> Result<Vec<CardInfo>, ImportError> {
 
 // This is a bad error type right now
 // TODO: Implement proper conversion from the other two errors in here
+#[derive(Debug)]
 pub struct ImportError {
     msg: String,
 }
