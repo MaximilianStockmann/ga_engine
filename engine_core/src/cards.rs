@@ -27,8 +27,8 @@ pub struct CardInfo {
     pub life: Option<i32>,
     pub name: String,
     pub power: Option<i32>,
-    pub referenced_by: Vec<CardRefernce>,
-    pub references: Vec<CardRefernce>,
+    pub referenced_by: Vec<CardReference>,
+    pub references: Vec<CardReference>,
     pub result_editions: Vec<EditionInfo>,
     pub rule: Vec<Ruling>,
     pub slug: String,
@@ -39,7 +39,7 @@ pub struct CardInfo {
 
 // TODO: Give kind and direction proper enum types
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-pub struct CardRefernce {
+pub struct CardReference {
     kind: String,
     name: String,
     slug: String,

@@ -29,7 +29,7 @@ pub struct Hand {
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct Memory {
-    cards: Vec<Card>,
+    pub cards: Vec<Card>,
     zone_info: ZoneInformation,
 }
 
@@ -41,7 +41,7 @@ pub struct Graveyard {
 
 #[derive(Debug, Serialize, Deserialize, PartialEq, Clone)]
 pub struct Banishment {
-    cards: Vec<Card>,
+    pub cards: Vec<Card>,
     zone_info: ZoneInformation,
 }
 
@@ -62,10 +62,10 @@ pub enum Visibility {
 }
 
 pub trait Zone {
-    fn move_to<T: Zone>(&mut self, to_zone: &mut T, card: &Card) -> Result<(), ZoneChangeError>;
     fn add_card(&mut self, card: &Card);
     fn remove_card(&mut self, card: &Card);
     fn get_cards(&self) -> &Vec<Card>;
+    fn check_card(&self, card: &Card) -> bool;
 }
 
 impl Hand {
@@ -80,33 +80,6 @@ impl Hand {
 }
 
 impl Zone for Hand {
-    fn move_to<T: Zone>(&mut self, to_zone: &mut T, card: &Card) -> Result<(), ZoneChangeError> {
-        let matched_card = match self
-            .cards
-            .iter()
-            .find(|&card_in_hand| *card_in_hand == *card)
-        {
-            Some(card) => {
-                to_zone.add_card(card);
-                Ok(card)
-            }
-            None => Err(ZoneChangeError {
-                error_message: "Tried to remove card from hand that did not exist".to_string(),
-            }),
-        };
-
-        if let Ok(_) = matched_card {
-            to_zone.add_card(&card);
-            self.remove_card(&card);
-        } else {
-            return Err(ZoneChangeError {
-                error_message: "Error while trying to move card between zones".to_string(),
-            });
-        }
-
-        Ok(())
-    }
-
     fn add_card(&mut self, card: &Card) {
         self.cards.push(card.clone());
     }
@@ -117,37 +90,16 @@ impl Zone for Hand {
 
     fn get_cards(&self) -> &Vec<Card> {
         &self.cards
+    }
+
+    fn check_card(&self, card: &Card) -> bool {
+        let cards: &Vec<Card> = &self.cards;
+
+        true
     }
 }
 
 impl Zone for Graveyard {
-    fn move_to<T: Zone>(&mut self, to_zone: &mut T, card: &Card) -> Result<(), ZoneChangeError> {
-        let matched_card = match self
-            .cards
-            .iter()
-            .find(|&card_in_hand| *card_in_hand == *card)
-        {
-            Some(card) => {
-                //to_zone.add_card(*card);
-                Ok(card)
-            }
-            None => Err(ZoneChangeError {
-                error_message: "Tried to remove card from hand that did not exist".to_string(),
-            }),
-        };
-
-        if let Ok(_) = matched_card {
-            to_zone.add_card(&card);
-            self.remove_card(&card);
-        } else {
-            return Err(ZoneChangeError {
-                error_message: "Error while trying to move card between zones".to_string(),
-            });
-        }
-
-        Ok(())
-    }
-
     fn add_card(&mut self, card: &Card) {
         self.cards.push(card.clone());
     }
@@ -158,6 +110,12 @@ impl Zone for Graveyard {
 
     fn get_cards(&self) -> &Vec<Card> {
         &self.cards
+    }
+
+    fn check_card(&self, card: &Card) -> bool {
+        let cards: &Vec<Card> = &self.cards;
+
+        true
     }
 }
 

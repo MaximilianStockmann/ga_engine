@@ -5,7 +5,7 @@ use std::fs::File;
 use std::io::BufReader;
 
 pub fn import_cards() -> Result<Vec<CardInfo>, ImportError> {
-    let file = File::open("C:\\Users\\User\\Documents\\Programming\\Rust\\ga_engine\\cards.json")?;
+    let file = File::open("cards.json")?;
     let reader = BufReader::new(file);
 
     let cards = serde_json::from_reader(reader)?;
